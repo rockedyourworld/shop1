@@ -1,3 +1,6 @@
+from datetime import datetime
+
+import pytz
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 
@@ -60,6 +63,18 @@ class ProductModel(models.Model):
         related_name='products'
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_discount(self):
+        return self.discount != 0
+
+    def get_price(self):
+        if self.is_discount():
+            return self.price - self.price * self.discount / 100
+        return self.price
+
+    def is_new(self):
+        delta = datetime.now(pytz.timezone('Asia/Tashkent')) - self.created_at
+        return delta.days <= 3
 
     def __str__(self):
         return self.title

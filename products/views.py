@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views.generic import ListView
 
-# Create your views here.
+from products.models import ProductModel
+
+
+class ProductListView(ListView):
+    template_name = 'products.html'
+    queryset = ProductModel.objects.order_by('-pk')
